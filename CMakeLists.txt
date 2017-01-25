@@ -124,6 +124,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(example/tiles)
 add_subdirectory(example/pipes)
+add_subdirectory(example/foo)
 
 install(FILES include/nbdl.hpp  DESTINATION include)
 install(DIRECTORY include/nbdl  DESTINATION include)
