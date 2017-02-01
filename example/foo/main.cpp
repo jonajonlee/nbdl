@@ -1,9 +1,12 @@
 #include <array>
 #include <boost/hana.hpp>
-#include <boost/hana/ext/std/array.hpp>
 #include <boost/hana/ext/std/integer_sequence.hpp>
+#include <boost/hana/experimental/printable.hpp>
 #include <iostream>
 #include <vector>
+#include <utility>
+
+#include "fold_left.hpp"
 
 namespace hana = boost::hana;
 using integer_sequence_tag = hana::ext::std::integer_sequence_tag;
@@ -61,36 +64,25 @@ void print(std::index_sequence<i...>)
  *   Note that iterating like this is bad.
  *************/
 
-template <typename Tag, typename X>
-auto sum(std::vector<X> const& xs, std::size_t i = 0)
+template <typename Xs>
+auto sum(Xs const& xs)
 {
-  if (i >= example::size(xs))
-    return hana::zero<Tag>();
-  else
-    return hana::plus(xs[i], sum<Tag>(xs, i + 1));
-}
-
-template <typename Tag, typename Xs>
-auto sum(Xs const& xs,
-  std::enable_if_t<hana::Foldable<Xs>::value, int> = {})
-{
-  return hana::fold_left(xs, hana::zero<Tag>(),
-    [](auto const& state, auto const& x)
-    {
-      return hana::plus(state, x);
-    });
+  return example::fold_left(xs, [](auto const& state, auto const& x)
+  {
+    return hana::plus(state, x);
+  });
 }
 
 int main()
 {
   print(
-    sum<int>(std::vector<int>{0, 1, 2, 3, 4, 5})
+    sum(std::vector<int>{0, 1, 2, 3, 4, 5})
   );
   print(
-    sum<int>(std::array<int, 6>{0, 1, 2, 3, 4, 5})
+    sum(std::array<int, 6>{0, 1, 2, 3, 4, 5})
   );
   print(
-    sum<integer_sequence_tag>(
+    sum(
       hana::make_tuple(
         std::index_sequence<0>{}
       , std::index_sequence<1>{}
