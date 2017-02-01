@@ -17,3 +17,4 @@ add_custom_target(run.example.foo
   COMMENT "Build and run: example.foo"
 )
 add_dependencies(run.example.foo example.foo)
+include_directories("./include")
